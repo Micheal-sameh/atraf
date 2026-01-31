@@ -99,6 +99,7 @@ return [
     'back' => 'Back',
     'logout' => 'Logout',
     'login' => 'Login',
+    'logged_out_successfully' => 'You have been logged out successfully',
     'yes' => 'Yes',
     'no' => 'No',
     'confirm' => 'Are you sure?',
@@ -185,4 +186,7 @@ return [
     'roles_updated_successfully' => 'Roles updated successfully',
     'roles' => 'Roles',
     'role' => 'Role',
+    'password_label' => 'Password',
+    'remember_me_label' => 'Remember Me',
+    'login_button' => 'Login',
 ];

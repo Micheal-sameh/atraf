@@ -37,10 +37,18 @@ class AuthController extends Controller
             ->withErrors(['membership_code' => __('auth.failed')]);
     }
 
-    public function logout()
+    /**
+     * Logout user and invalidate session
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout(\Illuminate\Http\Request $request)
     {
         Auth::logout();
 
-        return redirect()->route('loginPage');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('loginPage')->with('success', __('messages.logged_out_successfully'));
     }
 }

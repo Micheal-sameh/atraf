@@ -26,8 +26,9 @@ Route::get('/', function () {
 Route::prefix('auth')->group(function () {
     Route::get('/login', [AuthController::class, 'loginPage'])->name('loginPage');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
 

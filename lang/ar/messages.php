@@ -99,6 +99,7 @@ return [
     'back' => 'رجوع',
     'logout' => 'تسجيل خروج',
     'login' => 'تسجيل دخول',
+    'logged_out_successfully' => 'تم تسجيل الخروج بنجاح',
     'yes' => 'نعم',
     'no' => 'لا',
     'confirm' => 'هل أنت متأكد؟',
@@ -185,4 +186,7 @@ return [
     'roles_updated_successfully' => 'تم تحديث الأدوار بنجاح',
     'roles' => 'الأدوار',
     'role' => 'الدور',
+    'remember_me_label' => 'تذكرني',
+    'password_label' => 'كلمة المرور',
+    'login_button' => 'تسجيل الدخول',
 ];
