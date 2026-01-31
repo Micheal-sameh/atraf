@@ -11,7 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'membership_code',
     ];
 
     /**
@@ -43,4 +45,30 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Relationships
+    public function fatherSchedules()
+    {
+        return $this->hasMany(FatherSchedule::class, 'father_id');
+    }
+
+    public function atrafAsFather()
+    {
+        return $this->hasMany(Etraf::class, 'father_id');
+    }
+
+    public function atrafAsUser()
+    {
+        return $this->hasMany(Etraf::class, 'user_id');
+    }
+
+    // Family helper method
+    public function getFamilyCode()
+    {
+        if (preg_match('/^(E\d+C\d+F\d+)/', $this->membership_code, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
 }

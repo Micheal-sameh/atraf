@@ -529,79 +529,21 @@
                     <li class="menu-section-title"><i class="fas fa-users-cog me-2"></i>{{ __('messages.user_management') }}</li>
                     <li><a href="{{ route('users.index') }}" class="{{ $activeRoutes['users'] ? 'active' : '' }}">
                             <i class="fas fa-users"></i>{{ __('messages.users') }}</a></li>
-                    <li><a href="{{ route('users.admins') }}"
-                            class="{{ request()->routeIs('users.admins') ? 'active' : '' }}">
-                            <i class="fas fa-user-shield"></i>{{ __('messages.admin_users') }}</a></li>
                     <li><a href="{{ route('families.index') }}"
-                            class="{{ request()->routeIs('families.*') ? 'active' : '' }}">
+                            class="{{ $activeRoutes['families'] ? 'active' : '' }}">
                             <i class="fas fa-house-user"></i>{{ __('messages.families') }}</a></li>
-                    <li><a href="{{ route('user-history.index') }}"
-                            class="{{ request()->routeIs('user-history.*') ? 'active' : '' }}">
-                            <i class="fas fa-history"></i>{{ __('messages.user_history') }}</a></li>
-                    <li><a href="{{ route('users.leaderboard') }}"
-                            class="{{ $activeRoutes['leaderboard'] ? 'active' : '' }}">
-                            <i class="fas fa-trophy"></i>{{ __('messages.leaderboard') }}</a></li>
 
-                    <!-- Competition Section -->
-                    <li class="menu-section-title"><i class="fas fa-graduation-cap me-2"></i>{{ __('messages.competitions_section') }}</li>
-                    <li><a href="{{ route('competitions.index') }}"
-                            class="{{ $activeRoutes['competitions'] ? 'active' : '' }}">
-                            <i class="fas fa-flag"></i>{{ __('messages.competitions') }}</a></li>
-                    <li><a href="{{ route('quizzes.index') }}"
-                            class="{{ $activeRoutes['quizzes'] ? 'active' : '' }}">
-                            <i class="fas fa-question-circle"></i>{{ __('messages.quizzes') }}</a></li>
-                    <li><a href="{{ route('questions.index') }}"
-                            class="{{ $activeRoutes['questions'] ? 'active' : '' }}">
-                            <i class="fas fa-edit"></i>{{ __('messages.questions') }}</a></li>
+                    <!-- Father Schedules Section -->
+                    <li class="menu-section-title"><i class="fas fa-calendar-alt me-2"></i>{{ __('messages.schedule_management') }}</li>
+                    <li><a href="{{ route('father-schedules.index') }}"
+                            class="{{ $activeRoutes['father-schedules'] ? 'active' : '' }}">
+                            <i class="fas fa-calendar-week"></i>{{ __('messages.father_schedules') }}</a></li>
 
-                    <!-- Points & Rewards Section -->
-                    <li class="menu-section-title"><i class="fas fa-coins me-2"></i>{{ __('messages.points_rewards') }}</li>
-                    <li><a href="{{ route('bonus-penalties.index') }}"
-                            class="{{ $activeRoutes['bonus-penalties'] ? 'active' : '' }}">
-                            <i class="fas fa-balance-scale"></i>{{ __('messages.bonus-penalties') }}</a></li>
-                    @if(Auth::user()->hasRole('admin'))
-                        <li><a href="{{ route('bonus-penalties.pending') }}"
-                                class="{{ request()->routeIs('bonus-penalties.pending') ? 'active' : '' }}">
-                                <i class="fas fa-clock"></i>{{ __('messages.pending_approvals') }}</a></li>
-                    @endif
-                    @if(Auth::user()->hasRole('admin'))
-                        <li><a href="{{ route('point-transfers.index') }}"
-                                class="{{ request()->routeIs('point-transfers.*') ? 'active' : '' }}">
-                                <i class="fas fa-exchange-alt"></i>{{ __('messages.point_transfers') }}</a></li>
-                    @endif
-                    <li><a href="{{ route('rewards.index') }}"
-                            class="{{ $activeRoutes['rewards'] ? 'active' : '' }}">
-                            <i class="fas fa-gift"></i>{{ __('messages.rewards') }}</a></li>
-                    <li><a href="{{ route('orders.index') }}"
-                            class="{{ $activeRoutes['orders'] ? 'active' : '' }}">
-                            <i class="fas fa-shopping-cart"></i>{{ __('messages.orders') }}</a></li>
-
-                    <!-- System Section -->
-                    <li class="menu-section-title"><i class="fas fa-cogs me-2"></i>{{ __('messages.system_settings') }}</li>
-                    <li><a href="{{ route('settings.index') }}"
-                            class="{{ $activeRoutes['settings'] ? 'active' : '' }}">
-                            <i class="fas fa-cog"></i>{{ __('messages.settings') }}</a></li>
-                    <li><a href="{{ route('groups.index') }}"
-                            class="{{ $activeRoutes['groups'] ? 'active' : '' }}">
-                            <i class="fas fa-layer-group"></i>{{ __('messages.groups') }}</a></li>
-                    <li><a href="{{ route('notifications.index') }}"
-                            class="{{ $activeRoutes['notifications'] ? 'active' : '' }}">
-                            <i class="fas fa-bell"></i>{{ __('messages.notifications') }}</a></li>
-
-                    <!-- Content Management Section -->
-                    <li class="menu-section-title"><i class="fas fa-folder me-2"></i>{{ __('messages.content_management') }}</li>
-                    <li><a href="{{ route('about_us.show') }}"
-                            class="{{ $activeRoutes['about_us'] ? 'active' : '' }}">
-                            <i class="fas fa-info-circle"></i>{{ __('messages.about_us') }}</a></li>
-                    <li><a href="{{ route('terms.show') }}"
-                            class="{{ $activeRoutes['terms'] ? 'active' : '' }}">
-                            <i class="fas fa-file-contract"></i>{{ __('messages.terms') }}</a></li>
-                    <li><a href="{{ route('social-media.index') }}"
-                            class="{{ $activeRoutes['social-media'] ? 'active' : '' }}">
-                            <i class="fas fa-share-alt"></i>{{ __('messages.social_media') }}</a></li>
-                    <li><a href="{{ route('info-videos.index') }}"
-                            class="{{ $activeRoutes['info-videos'] ? 'active' : '' }}">
-                            <i class="fas fa-video"></i>{{ __('messages.info_videos') }}</a></li>
+                    <!-- Atraf (Confessions) Section -->
+                    <li class="menu-section-title"><i class="fas fa-hands-praying me-2"></i>{{ __('messages.a3traf') }}</li>
+                    <li><a href="{{ route('atraf.index') }}"
+                            class="{{ $activeRoutes['atraf'] ? 'active' : '' }}">
+                            <i class="fas fa-church"></i>{{ __('messages.atraf') }}</a></li>
 
                     <li class="mt-3 border-top border-light pt-2">
                         <form action="{{ route('logout') }}" method="POST">
