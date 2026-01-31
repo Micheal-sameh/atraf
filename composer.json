@@ -10,10 +10,12 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "spatie/laravel-medialibrary": "^11.17",
         "spatie/laravel-permission": "^6.24"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
+        "fruitcake/laravel-debugbar": "^3.16",
         "laravel/pint": "^1.27",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
