@@ -13,9 +13,25 @@ class EtrafService
         protected FatherScheduleRepository $fatherScheduleRepository,
     ) {}
 
-    public function index($search = null, $status = null)
+    public function index($search = null, $status = null, $dateFrom = null, $dateTo = null)
     {
-        return $this->etrafRepository->index($search, $status);
+        $user = auth()->user();
+        $userId = null;
+        $fatherId = null;
+
+        // If user role, show only their records
+        if ($user->hasRole('user') && ! $user->hasRole('father') && ! $user->hasRole('admin')) {
+            $userId = $user->id;
+        }
+        // If father role (not admin), show records as both father and user
+        elseif ($user->hasRole('father') && ! $user->hasRole('admin')) {
+            // We'll handle this in repository with OR condition
+            $userId = $user->id;
+            $fatherId = $user->id;
+        }
+        // Admin sees all
+
+        return $this->etrafRepository->index($search, $status, $dateFrom, $dateTo, $userId, $fatherId);
     }
 
     public function show($id)
@@ -29,22 +45,22 @@ class EtrafService
     public function store($input)
     {
         // Validate that date is not before today
-        $date = Carbon::parse($input->date);
+        $date = Carbon::parse($input['date']);
         if ($date->isBefore(Carbon::today())) {
             throw new \Exception('Cannot create etraf for a date in the past');
         }
 
         // Check if father has schedule on this day
         $dayOfWeek = strtolower($date->format('l'));
-        $schedules = $this->fatherScheduleRepository->getSchedulesByDay($input->father_id, $dayOfWeek);
+        $schedules = $this->fatherScheduleRepository->getSchedulesByDay($input['father_id'], $dayOfWeek);
 
         if ($schedules->isEmpty()) {
             throw new \Exception('Father has no schedule on '.ucfirst($dayOfWeek));
         }
 
         // Validate time is within father's schedule
-        $fromTime = Carbon::parse($input->from);
-        $toTime = Carbon::parse($input->to);
+        $fromTime = Carbon::parse($input['from']);
+        $toTime = Carbon::parse($input['to']);
 
         $validSlot = false;
         foreach ($schedules as $schedule) {
@@ -61,7 +77,18 @@ class EtrafService
             throw new \Exception('Selected time is not within father\'s available schedule');
         }
 
-        return $this->etrafRepository->store($input);
+        // Add created_by
+        $data = $input;
+        $data['created_by'] = auth()->id();
+
+        $etraf = $this->etrafRepository->store($data);
+        // Assign user to father in father_users if first time
+        $fatherUser = \App\Models\FatherUser::firstOrCreate([
+            'father_id' => $input['father_id'],
+            'user_id' => $data['user_id'] ?? auth()->id(),
+        ]);
+
+        return $etraf;
     }
 
     public function updateStatus($id, $status)

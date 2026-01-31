@@ -19,13 +19,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
             $user = Auth::user();
-            if (! $user->hasRole(['admin'])) {
-                Auth::logout();
+            // if (! $user->hasRole(['admin'])) {
+            //     Auth::logout();
 
-                return redirect()->back()
-                    ->withInput($request->only('membership_code', 'remember'))
-                    ->withErrors(['membership_code' => __('messages.unauthorized')]);
-            }
+            //     return redirect()->back()
+            //         ->withInput($request->only('membership_code', 'remember'))
+            //         ->withErrors(['membership_code' => __('messages.unauthorized')]);
+            // }
 
             $request->session()->regenerate();
 

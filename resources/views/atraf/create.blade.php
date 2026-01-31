@@ -32,6 +32,7 @@
                             @enderror
                         </div>
 
+                        @if($isAdmin)
                         <div class="mb-3">
                             <label for="user_id" class="form-label">{{ __('messages.user') }}</label>
                             <select name="user_id" id="user_id" class="form-control @error('user_id') is-invalid @enderror" required>
@@ -46,6 +47,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        @endif
 
                         <div class="mb-3">
                             <label for="date" class="form-label">{{ __('messages.date') }}</label>
@@ -55,18 +57,14 @@
                             @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="from" class="form-label">{{ __('messages.from') }}</label>
-                            <input type="time" name="from" id="from" class="form-control @error('from') is-invalid @enderror" value="{{ old('from') }}" required>
+                        <div class="mb-3" id="slotContainer" style="display: none;">
+                            <label for="slot" class="form-label">{{ __('messages.select_slot') }}</label>
+                            <select name="slot" id="slot" class="form-control @error('from') is-invalid @enderror" required>
+                                <option value="">{{ __('messages.select_slot') }}</option>
+                            </select>
+                            <input type="hidden" name="from" id="from_hidden">
+                            <input type="hidden" name="to" id="to_hidden">
                             @error('from')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="to" class="form-label">{{ __('messages.to') }}</label>
-                            <input type="time" name="to" id="to" class="form-control @error('to') is-invalid @enderror" value="{{ old('to') }}" required>
-                            @error('to')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -86,4 +84,61 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fatherSelect = document.getElementById('father_id');
+    const dateInput = document.getElementById('date');
+    const slotContainer = document.getElementById('slotContainer');
+    const slotSelect = document.getElementById('slot');
+    const fromHidden = document.getElementById('from_hidden');
+    const toHidden = document.getElementById('to_hidden');
+
+    function fetchSlots() {
+        const fatherId = fatherSelect.value;
+        const date = dateInput.value;
+
+        if (!fatherId || !date) {
+            slotContainer.style.display = 'none';
+            return;
+        }
+
+        fetch(`{{ route('atraf.available-slots') }}?father_id=${fatherId}&date=${date}`)
+            .then(response => response.json())
+            .then(data => {
+                slotSelect.innerHTML = '<option value="">{{ __('messages.select_slot') }}</option>';
+
+                if (data.slots && data.slots.length > 0) {
+                    data.slots.forEach(slot => {
+                        const option = document.createElement('option');
+                        option.value = JSON.stringify(slot);
+                        option.textContent = `${slot.from} - ${slot.to}`;
+                        slotSelect.appendChild(option);
+                    });
+                    slotContainer.style.display = 'block';
+                } else {
+                    slotContainer.style.display = 'none';
+                    alert('{{ __('messages.no_available_slots') }}');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                slotContainer.style.display = 'none';
+            });
+    }
+
+    fatherSelect.addEventListener('change', fetchSlots);
+    dateInput.addEventListener('change', fetchSlots);
+
+    slotSelect.addEventListener('change', function() {
+        if (this.value) {
+            const slot = JSON.parse(this.value);
+            fromHidden.value = slot.from;
+            toHidden.value = slot.to;
+        }
+    });
+});
+</script>
+@endpush
 @endsection

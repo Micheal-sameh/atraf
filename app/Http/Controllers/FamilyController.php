@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Etraf;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Mpdf\Mpdf;
 
 class FamilyController extends Controller
 {
@@ -144,9 +144,19 @@ class FamilyController extends Controller
             ];
         })->all();
 
-        $pdf = PDF::loadView('families.export-pdf', compact('membersData', 'familyCode'));
-        $pdf->setPaper('a4');
+        $html = view('families.export-pdf', compact('membersData', 'familyCode'))->render();
 
-        return $pdf->download('family_'.$familyCode.'_'.date('Y-m-d').'.pdf');
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_left' => 15,
+            'margin_right' => 15,
+            'margin_top' => 15,
+            'margin_bottom' => 15,
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        return $mpdf->Output('family_'.$familyCode.'_'.date('Y-m-d').'.pdf', 'D');
     }
 }

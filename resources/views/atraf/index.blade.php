@@ -15,21 +15,34 @@
                     @endif
 
                     <form method="GET" action="{{ route('atraf.index') }}" class="mb-3">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <input type="text" name="search" class="form-control" placeholder="{{ __('messages.search') }}..." value="{{ request('search') }}">
-                            </div>
+                        <div class="row g-2">
+                            @if($canSearch)
                             <div class="col-md-3">
+                                <input type="text" name="search" class="form-control" placeholder="{{ __('messages.search') }}..." value="{{ $search }}">
+                            </div>
+                            @endif
+                            <div class="col-md-2">
                                 <select name="status" class="form-control">
                                     <option value="">{{ __('messages.all_status') }}</option>
-                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('messages.pending') }}</option>
-                                    <option value="waiting" {{ request('status') == 'waiting' ? 'selected' : '' }}>{{ __('messages.waiting') }}</option>
-                                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>{{ __('messages.completed') }}</option>
+                                    <option value="pending" {{ $status == 'pending' ? 'selected' : '' }}>{{ __('messages.pending') }}</option>
+                                    <option value="waiting" {{ $status == 'waiting' ? 'selected' : '' }}>{{ __('messages.waiting') }}</option>
+                                    <option value="completed" {{ $status == 'completed' ? 'selected' : '' }}>{{ __('messages.completed') }}</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary">{{ __('messages.filter') }}</button>
+                                <input type="date" name="date_from" class="form-control" placeholder="{{ __('messages.date_from') }}" value="{{ $dateFrom }}">
                             </div>
+                            <div class="col-md-2">
+                                <input type="date" name="date_to" class="form-control" placeholder="{{ __('messages.date_to') }}" value="{{ $dateTo }}">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">{{ __('messages.filter') }}</button>
+                            </div>
+                            @if($search || $status || $dateFrom || $dateTo)
+                            <div class="col-md-1">
+                                <a href="{{ route('atraf.index') }}" class="btn btn-secondary w-100">{{ __('messages.clear') }}</a>
+                            </div>
+                            @endif
                         </div>
                     </form>
 
@@ -53,16 +66,33 @@
                                     <td>{{ $etraf->date->format('Y-m-d') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($etraf->from)->format('H:i') }} - {{ \Carbon\Carbon::parse($etraf->to)->format('H:i') }}</td>
                                     <td>
-                                        @if($etraf->status == 'pending')
-                                            <span class="badge bg-warning">{{ __('messages.pending') }}</span>
-                                        @elseif($etraf->status == 'waiting')
-                                            <span class="badge bg-info">{{ __('messages.waiting') }}</span>
-                                        @else
-                                            <span class="badge bg-success">{{ __('messages.completed') }}</span>
-                                        @endif
+                                        @php
+                                            $statusBadge = match($etraf->status->value) {
+                                                'pending' => 'warning',
+                                                'waiting' => 'info',
+                                                'completed' => 'success',
+                                                default => 'secondary'
+                                            };
+                                        @endphp
+                                        <span class="badge bg-{{ $statusBadge }}">{{ $etraf->status->label() }}</span>
                                     </td>
                                     <td>
                                         <a href="{{ route('atraf.show', $etraf->id) }}" class="btn btn-sm btn-info">{{ __('messages.view') }}</a>
+
+                                        @if((auth()->user()->hasRole('father') || auth()->user()->hasRole('admin')) && $etraf->status->value != 'completed')
+                                        <form action="{{ route('atraf.update-status', $etraf->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="status" value="{{ $etraf->status->value == 'pending' ? 'waiting' : 'completed' }}">
+                                            <button type="submit" class="btn btn-sm btn-{{ $etraf->status->value == 'pending' ? 'warning' : 'success' }}">
+                                                @if($etraf->status->value == 'pending')
+                                                    {{ __('messages.mark_waiting') }}
+                                                @else
+                                                    {{ __('messages.mark_completed') }}
+                                                @endif
+                                            </button>
+                                        </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach

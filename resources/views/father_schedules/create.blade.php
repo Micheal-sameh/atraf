@@ -19,10 +19,10 @@
 
                         <div class="mb-3">
                             <label for="father_id" class="form-label">{{ __('messages.father') }}</label>
-                            <select name="father_id" id="father_id" class="form-control @error('father_id') is-invalid @enderror" required>
+                            <select name="father_id" id="father_id" class="form-control @error('father_id') is-invalid @enderror" required {{ count($fathers) == 1 ? 'readonly' : '' }}>
                                 <option value="">{{ __('messages.select_father') }}</option>
                                 @foreach($fathers as $father)
-                                    <option value="{{ $father->id }}" {{ old('father_id') == $father->id ? 'selected' : '' }}>
+                                    <option value="{{ $father->id }}" {{ (old('father_id') == $father->id || (count($fathers) == 1 && $father->id == auth()->id())) ? 'selected' : '' }}>
                                         {{ $father->name }}
                                     </option>
                                 @endforeach

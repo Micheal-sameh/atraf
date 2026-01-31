@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\EtrafStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,12 +20,14 @@ class Etraf extends Model
         'to',
         'status',
         'notes',
+        'created_by',
     ];
 
     protected $casts = [
         'date' => 'date',
         'from' => 'datetime:H:i',
         'to' => 'datetime:H:i',
+        'status' => EtrafStatus::class,
     ];
 
     public function father()
@@ -35,6 +38,11 @@ class Etraf extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function getDayOfWeek()

@@ -16,6 +16,7 @@ class FatherSchedule extends Model
         'from',
         'to',
         'slot_duration',
+        'created_by',
     ];
 
     protected $casts = [
@@ -26,6 +27,11 @@ class FatherSchedule extends Model
     public function father()
     {
         return $this->belongsTo(User::class, 'father_id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function getSlots()

@@ -28,11 +28,20 @@ class EtrafRepository extends BaseRepository
         return $this->pagination ? $query->paginate($this->perPage) : $query->get();
     }
 
-    public function index($search = null, $status = null)
+    public function index($search = null, $status = null, $dateFrom = null, $dateTo = null, $userId = null, $fatherId = null)
     {
         $query = $this->model->query()
             ->with(['father:id,name,email', 'user:id,name,email'])
             ->when(isset($status), fn ($q) => $q->where('status', $status))
+            ->when(isset($dateFrom), fn ($q) => $q->whereDate('date', '>=', $dateFrom))
+            ->when(isset($dateTo), fn ($q) => $q->whereDate('date', '<=', $dateTo))
+            ->when(isset($userId) && isset($fatherId), function ($q) use ($userId, $fatherId) {
+                // Father sees records as both father and user
+                $q->where(function ($query) use ($userId, $fatherId) {
+                    $query->where('user_id', $userId)->orWhere('father_id', $fatherId);
+                });
+            })
+            ->when(isset($userId) && ! isset($fatherId), fn ($q) => $q->where('user_id', $userId))
             ->when(isset($search), fn ($q) => $q->whereHas('user', function ($query) use ($search) {
                 $query->where('name', 'like', '%'.$search.'%')
                     ->orWhere('email', 'like', '%'.$search.'%');
@@ -54,12 +63,12 @@ class EtrafRepository extends BaseRepository
     public function store($input)
     {
         return $this->model->create([
-            'father_id' => $input->father_id,
-            'user_id' => $input->user_id,
-            'date' => $input->date,
-            'from' => $input->from,
-            'to' => $input->to,
-            'notes' => $input->notes ?? null,
+            'father_id' => $input['father_id'],
+            'user_id' => $input['user_id'] ?? auth()->id(),
+            'date' => $input['date'],
+            'from' => $input['from'],
+            'to' => $input['to'],
+            'notes' => $input['notes'] ?? null,
         ]);
     }
 

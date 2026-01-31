@@ -525,7 +525,8 @@
         @auth
             <nav>
                 <ul>
-                    <!-- User Management Section -->
+                    <!-- User Management Section - Only father and admin -->
+                    @if(auth()->user()->hasRole('father') || auth()->user()->hasRole('admin'))
                     <li class="menu-section-title"><i class="fas fa-users-cog me-2"></i>{{ __('messages.user_management') }}</li>
                     <li><a href="{{ route('users.index') }}" class="{{ $activeRoutes['users'] ? 'active' : '' }}">
                             <i class="fas fa-users"></i>{{ __('messages.users') }}</a></li>
@@ -533,17 +534,35 @@
                             class="{{ $activeRoutes['families'] ? 'active' : '' }}">
                             <i class="fas fa-house-user"></i>{{ __('messages.families') }}</a></li>
 
-                    <!-- Father Schedules Section -->
+                    <!-- Father Schedules Section - Only father and admin -->
                     <li class="menu-section-title"><i class="fas fa-calendar-alt me-2"></i>{{ __('messages.schedule_management') }}</li>
                     <li><a href="{{ route('father-schedules.index') }}"
                             class="{{ $activeRoutes['father-schedules'] ? 'active' : '' }}">
                             <i class="fas fa-calendar-week"></i>{{ __('messages.father_schedules') }}</a></li>
+                    @endif
 
                     <!-- Atraf (Confessions) Section -->
                     <li class="menu-section-title"><i class="fas fa-hands-praying me-2"></i>{{ __('messages.a3traf') }}</li>
                     <li><a href="{{ route('atraf.index') }}"
                             class="{{ $activeRoutes['atraf'] ? 'active' : '' }}">
                             <i class="fas fa-church"></i>{{ __('messages.atraf') }}</a></li>
+                    <li><a href="{{ route('atraf.create') }}"
+                            class="{{ request()->routeIs('atraf.create') ? 'active' : '' }}">
+                            <i class="fas fa-plus-circle"></i>{{ __('messages.create_etraf') }}</a></li>
+                    <li><a href="{{ route('atraf.my-etraf') }}"
+                            class="{{ request()->routeIs('atraf.my-etraf') ? 'active' : '' }}">
+                            <i class="fas fa-history"></i>{{ __('messages.my_etraf') }}</a></li>
+
+                    <!-- Admin Section -->
+                    @if(auth()->user()->hasRole('admin'))
+                    <li class="menu-section-title"><i class="fas fa-cog me-2"></i>{{ __('messages.administration') }}</li>
+                    <li><a href="{{ route('settings.index') }}"
+                            class="{{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                            <i class="fas fa-cogs"></i>{{ __('messages.settings') }}</a></li>
+                    <li><a href="{{ route('users.index') }}"
+                            class="{{ request()->routeIs('users.*') && !request()->routeIs('users.show') ? 'active' : '' }}">
+                            <i class="fas fa-users-cog"></i>{{ __('messages.user_role_management') }}</a></li>
+                    @endif
 
                     <li class="mt-3 border-top border-light pt-2">
                         <form action="{{ route('logout') }}" method="POST">

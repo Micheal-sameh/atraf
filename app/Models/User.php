@@ -62,6 +62,19 @@ class User extends Authenticatable
         return $this->hasMany(Etraf::class, 'user_id');
     }
 
+    // Father-User relationships
+    public function assignedUsers()
+    {
+        return $this->belongsToMany(User::class, 'father_users', 'father_id', 'user_id')
+            ->withTimestamps();
+    }
+
+    public function fathers()
+    {
+        return $this->belongsToMany(User::class, 'father_users', 'user_id', 'father_id')
+            ->withTimestamps();
+    }
+
     // Family helper method
     public function getFamilyCode()
     {

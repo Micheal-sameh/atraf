@@ -9,10 +9,21 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 
+/**
+ * SettingController
+ *
+ * Manages application settings, API tokens, and static content
+ * like about us and terms pages.
+ */
 class SettingController extends Controller
 {
     public function __construct(protected SettingService $settingService) {}
 
+    /**
+     * Display the settings page
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $settings = $this->settingService->index();
@@ -20,6 +31,11 @@ class SettingController extends Controller
         return view('settings.index', compact('settings'));
     }
 
+    /**
+     * Update application settings
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(UpdateSettingRequest $request)
     {
         $this->settingService->update($request->settings, $request?->allFiles()['settings'] ?? null);

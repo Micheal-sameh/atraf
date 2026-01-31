@@ -25,7 +25,10 @@ class FatherScheduleService
 
     public function store($input)
     {
-        return $this->fatherScheduleRepository->store($input);
+        $data = $input->validated();
+        $data['created_by'] = auth()->id();
+
+        return $this->fatherScheduleRepository->store($data);
     }
 
     public function delete($id)

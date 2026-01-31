@@ -22,5 +22,21 @@ class UserDatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
         $user->assignRole('admin');
+
+        $user1 = User::create([
+            'name' => 'father',
+            'membership_code' => 'E1C1F1NR2',
+            'phone' => '01234567891',
+            'password' => Hash::make('password'),
+        ]);
+        $user1->assignRole('father');
+
+        $user2 = User::create([
+            'name' => 'user',
+            'membership_code' => 'E1C1F1NR3',
+            'phone' => '01234567892',
+            'password' => Hash::make('password'),
+        ]);
+        $user2->assignRole('user');
     }
 }

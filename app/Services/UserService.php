@@ -12,13 +12,18 @@ class UserService
 
     public function index($search = null)
     {
-        return $this->userRepository->index($search);
+        $users = $this->userRepository->index($search);
+
+        // Load relationships
+        $users->load(['roles', 'fathers']);
+
+        return $users;
     }
 
     public function show($id)
     {
         $user = $this->userRepository->show($id);
-        $user->load(['atrafAsUser']);
+        $user->load(['atrafAsUser', 'roles', 'fathers']);
 
         return $user;
     }

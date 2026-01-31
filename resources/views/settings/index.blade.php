@@ -78,7 +78,7 @@
         </form>
 
         <!-- Delete All Tokens Section -->
-        <div class="mt-5">
+        {{-- <div class="mt-5">
             <div class="card border-danger shadow-sm rounded-4">
                 <div class="card-body p-4">
                     <h5 class="card-title text-danger mb-3">
@@ -92,10 +92,10 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Delete Tokens Modal -->
-        <div class="modal fade" id="deleteTokensModal" tabindex="-1" aria-labelledby="deleteTokensModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade" id="deleteTokensModal" tabindex="-1" aria-labelledby="deleteTokensModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -127,7 +127,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection
 
